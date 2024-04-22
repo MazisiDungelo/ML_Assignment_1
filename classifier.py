@@ -102,3 +102,19 @@ def train(model, train_dataset, criterion, optimizer, epochs):
                 accuracy = 100 * correct.item() / total
 
                 print('Validation Accuracy: {} %'.format(accuracy))
+    
+def test(test_loader):
+    """
+    Test the model using a new unique dataset
+    """
+    model.eval()
+    with torch.no_grad():
+        correct = 0
+        total = 0
+        for images, labels in test_loader:
+            outputs = model(images)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
+        print('Test Accuracy of the model on the 10000 test images: {} %'.format(100 * correct / total))
