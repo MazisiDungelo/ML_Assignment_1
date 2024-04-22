@@ -118,3 +118,13 @@ def test(test_loader):
             correct += (predicted == labels).sum().item()
 
         print('Test Accuracy of the model on the 10000 test images: {} %'.format(100 * correct / total))
+
+def classify(image):
+    """
+    Classify the input image taken as parameter and classify the image
+    """
+    model.eval()
+    with torch.no_grad():
+        output = model(image)
+        _,predicted = torch.max(output,1)
+        print("Classifier: ", predicted.item())
