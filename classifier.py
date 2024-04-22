@@ -4,6 +4,9 @@ import numpy as np
 from torchvision import datasets
 from torch.utils.data import DataLoader
 from torchvision.transforms import ToTensor
+from torchvision import transforms
+from torchvision.transforms import ToTensor
+from PIL import Image
 
 class Model(nn.Module):
     """
@@ -128,3 +131,31 @@ def classify(image):
         output = model(image)
         _,predicted = torch.max(output,1)
         print("Classifier: ", predicted.item())
+
+if __name__ == "__main__":
+    """
+    Controls classfication program
+    """
+    train(model,train_loader, criterion, optimizer,num_epochs)
+    test(test_loader)
+    while True:
+        image_path = input("Please enter a filepath: \n")
+        if image_path.lower() == 'exit':
+            print("Exiting...")
+            break
+        else:
+            try:
+                # Load and preprocess the image
+                image = Image.open(image_path)
+                transform = transforms.Compose([
+                    transforms.Resize((28, 28)),  # Resize the image 
+                    transforms.ToTensor(), # Convert to tensor
+                    transforms.Normalize((0.1307,), (0.3081,))  # Normalize 
+                ])
+                image_tensor = transform(image)
+                image_tensor = image_tensor.reshape(-1, 28*28) # Flatten image
+
+                # Evaluate the classifier on the user-supplied image
+                classify(image_tensor)
+            except Exception as e:
+                print("Error processing the image: ",e)
