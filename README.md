@@ -10,4 +10,6 @@ This file has
 # How to run the program succesffuly
 The program is invoked using 'python classifier.py' 
 This program must be in the same directory with the directory of 'MNIST_data' and this directory must be named 'MNIST_data'
+# Local resipotory
+https://github.com/MazisiDungelo/ML_Assignment_1.git
 
