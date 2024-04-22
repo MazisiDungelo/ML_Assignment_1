@@ -65,3 +65,40 @@ train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 test_loader = DataLoader(test_data, batch_size=64, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=64, shuffle=True)
 
+# Define hyperparameters for training
+num_epochs = 30
+learning_rate = 0.001
+input_size = 28*28
+
+model = Model(input_size)
+optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+criterion = nn.CrossEntropyLoss()
+total_step = len(train_loader)
+
+def train(model, train_dataset, criterion, optimizer, epochs):
+    """
+    Takes model as parameter and train it using dataset and other hyperparameters
+    """
+    for epoch in range(epochs):
+        for i, (images, labels) in enumerate(train_loader):
+            # Forward pass
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            if (i+1) % 100 == 0:
+                print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
+                    .format(epoch+1, epochs, i+1, total_step, loss.item()))
+                # Compute validation accuracy
+                correct = 0
+                total = 0
+                for images, labels in val_loader:
+                    outputs = model(images)
+                    _,predicted = torch.max(outputs, 1)
+                    total += labels.size(0)
+                    correct += (predicted == labels).sum()
+                accuracy = 100 * correct.item() / total
+
+                print('Validation Accuracy: {} %'.format(accuracy))
